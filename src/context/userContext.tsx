@@ -1,4 +1,4 @@
-import React, { createContext, useState } from "react";
+import React, { createContext, useState, useEffect } from "react";
 
 interface User {
   fullName: string;
@@ -28,18 +28,28 @@ export const UserContext = createContext<UserContextType>(
 );
 
 function UserProvider ({ children }: any) {
+
 const [user, setUser] = useState<User | null>(null);
-  
+
+   useEffect(() => {
+     getUser();
+   }, []);
+
 const saveUser = (userData: User) => {
+ try {
   localStorage.setItem("user", JSON.stringify(userData));
-  setUser(userData);
+   setUser(userData)
+   console.log(userData)
+ } catch (error) {
+   console.error(error);
+ }
+  
 };
 
 const getUser = () => {
   const storedUser = localStorage.getItem("user");
-  if (storedUser) {
-    setUser(JSON.parse(storedUser));
-  }
+   setUser(storedUser ? JSON.parse(storedUser) : null);
+  //  console.log(storedUser)
 };
 
 const clearUser = () => {
