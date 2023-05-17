@@ -1,7 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
 
 interface User {
-  fullName: string;
+  firstName: string;
+  lastName: string;
   phoneNumber: string;
   email: string;
   password: string;
@@ -31,31 +32,32 @@ function UserProvider ({ children }: any) {
 
 const [user, setUser] = useState<User | null>(null);
 
-   useEffect(() => {
-     getUser();
-   }, []);
-
 const saveUser = (userData: User) => {
  try {
   localStorage.setItem("user", JSON.stringify(userData));
+  console.log("successful");
    setUser(userData)
-   console.log(userData)
- } catch (error) {
+ } 
+ catch (error) {
    console.error(error);
  }
+
   
 };
 
 const getUser = () => {
   const storedUser = localStorage.getItem("user");
    setUser(storedUser ? JSON.parse(storedUser) : null);
-  //  console.log(storedUser)
 };
 
 const clearUser = () => {
   localStorage.removeItem("user");
   setUser(null);
 };
+
+useEffect(() => {
+  getUser();
+}, []);
 
 const userContextValue = {
   user,
